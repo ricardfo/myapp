@@ -4,10 +4,21 @@
 
 @section('content')
   <h1>Cadastro de Novo Produto</h1>
-  <form action="{{ route('products.store') }}" method="post">
+
+  @if($errors->any())
+    <ul>
+    @foreach($errors->all() as $error)
+      <li>{{ $error }}</li>
+    @endforeach
+    </ul>
+  @endif
+  <form action="{{ route('products.store') }}" method="post"
+  enctype="multipart/form-data">
     @csrf
-    <input type="text" name="name" placeholder="Nome:">
-    <input type="text" name="description" placeholder="Descrição:">
+    <input type="text" name="name" placeholder="Nome:" value="{{ old('name') }}">
+    <input type="text" name="description" placeholder="Descrição:" value="{{
+    old('description') }}">
+    <input type="file" name="photo">
     <button type="submit">Enviar</button>
   </form>
 @endsection
