@@ -6,65 +6,42 @@
 @include('admin.includes.alerts', ['content' => 'Alerta de preços de produtos'])
 
   <h1>Exibindo os produtos</h1>
-  <a href="{{ route('products.create') }}">Cadastrar</a>
-  <br />
-  <br />
-  @if($teste === 123)
-    É igual
+  <a href="{{ route('products.create') }}" class="btn btn-primary">Cadastrar</a>
+  <hr>
+  <form action="{{ route('products.search') }}" method="post" class="form form-inline">
+    @csrf
+    <input type="text" name="filter" placeholder="Filtrar:" class="form-control"
+     value="{{ $filters['filter'] ?? '' }}">
+    <button type="submit" class="btn btn-info">Pesquisar</button>
+  </form>
+  <br /> <br />
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Preço</th>
+        <th width="100">Açoes</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($products as $product)
+        <tr>
+          <td>{{ $product->name }}</td>
+          <td>{{ $product->price }}</td>
+          <td>
+            <a href="{{ route('products.show', $product->id) }}">Detalhes</a>
+            <a href="{{ route('products.edit', $product->id) }}">Editar</a>
+          </td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
+
+  @if(isset($filters))
+    {!! $products->appends($filters)->links() !!}
   @else
-      Not igual
+    {!! $products->links() !!}
   @endif
 
-  @unless ($teste === '123')
-    fffss
-  @endunless
-
-  @empty($teste)
-    vazio
-  @endempty
-
-  @auth
-    <p>Autenticado</p>
-  @else
-    <p>Não Autenticado</p>
-  @endauth
-
-  @guest
-    <p>Não Autenticado</p>
-  @endguest
-
-  @switch($teste)
-    @case(1)
-      igual 1
-      @break
-    @case(2)
-      iguale 2
-      @break
-    @default
-      default
-  @endswitch
-  <hr>
-  @isset($products)
-    @foreach($products as $product)
-    <p class="@if ($loop->last) last @endif">{{ $product }}</p>
-    @endforeach
-  @endisset
-  <hr>
-  @forelse($products as $product)
-    <p>{{ $product }}</p>
-    @empty
-      <p>Não existe produtos cadastrados</p>
-  @endforelse
 @endsection
-
-@push('styles')
-  <style>
-    .last { background: #CCC; }
-  </style>
-@endpush
-
-@push('scripts')
-  <script>
-    document.body.style.background = '#efefef'
-  </script>
-@endpush
